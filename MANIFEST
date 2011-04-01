@@ -1,5 +1,3 @@
-Changes
-ignore.txt
 lib/Mojolicious/Plugin/Mongodb.pm
 Makefile.PL
 MANIFEST

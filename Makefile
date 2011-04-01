@@ -59,11 +59,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = Mojolicious::Plugin::Mongodb
 NAME_SYM = Mojolicious_Plugin_Mongodb
-VERSION = v0.02
+VERSION = v0.04
 VERSION_MACRO = VERSION
-VERSION_SYM = v0_02
+VERSION_SYM = v0_04
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = v0.02
+XS_VERSION = v0.04
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -257,7 +257,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = Mojolicious-Plugin-Mongodb
-DISTVNAME = Mojolicious-Plugin-Mongodb-v0.02
+DISTVNAME = Mojolicious-Plugin-Mongodb-v0.04
 
 
 # --- MakeMaker macro section:
@@ -478,7 +478,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) Generating META.yml
 	$(NOECHO) $(ECHO) '--- #YAML:1.0' > META_new.yml
 	$(NOECHO) $(ECHO) 'name:               Mojolicious-Plugin-Mongodb' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version:            v0.02' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version:            v0.04' >> META_new.yml
 	$(NOECHO) $(ECHO) 'abstract:           Use MongoDB in Mojolicious' >> META_new.yml
 	$(NOECHO) $(ECHO) 'author:' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - Ben van Staveren <madcat@cpan.org>' >> META_new.yml
@@ -791,7 +791,7 @@ testdb_static :: testdb_dynamic
 # --- MakeMaker ppd section:
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
-	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="v0.02">' > $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="v0.04">' > $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <ABSTRACT>Use MongoDB in Mojolicious</ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>Ben van Staveren &lt;madcat@cpan.org&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd

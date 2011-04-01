@@ -5,7 +5,7 @@ use version;
 use Mojo::Base 'Mojolicious::Plugin';
 use MongoDB;
 
-our $VERSION = qv(0.02);
+our $VERSION = qv(0.04);
 
 sub register {
     my $self = shift;
@@ -39,7 +39,7 @@ Mojolicious::Plugin::Mongodb - Use MongoDB in Mojolicious
 
 =head1 VERSION
 
-Version 0.02
+Version 0.04
 
 =head1 SYNOPSIS
 
@@ -75,14 +75,13 @@ This helper will return the database you specify, if you don't specify one, then
         my $self = shift;
 
         # select a database yourself
-        $self->db('my_snazzy_database')->get_collection('foo')->insert({ bar: 'baz' });
+        $self->db('my_snazzy_database')->get_collection('foo')->insert({ bar => 'baz' });
 
         # if you passed 'my_snazzy_database' during plugin load as the default, this is equivalent:
-        $self->db->get_collection('foo')->insert({ bar: 'baz' });
+        $self->db->get_collection('foo')->insert({ bar => 'baz' });
 
         # if you want to be anal retentive about things in case no default exists and no database was passed:
-        $self->db and $self->db->get_collection('foo')->insert({ bar: 'baz' });
-
+        $self->db and $self->db->get_collection('foo')->insert({ bar => 'baz' });
     }
 
 =head2 coll(collname, [dbname])
@@ -150,6 +149,8 @@ L<http://search.cpan.org/dist/Mojolicious-Plugin-Mongodb/>
 =head1 ACKNOWLEDGEMENTS
 
 Based on Mojolicious::Plugin::Database because I don't want to leave the MongoDB crowd in the cold.
+
+Thanks to Henk van Oers for pointing out a few errors in the documentation, and letting me know I should really fix the MANIFEST
 
 =head1 LICENSE AND COPYRIGHT
 
