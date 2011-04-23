@@ -13,3 +13,6 @@ pod2htm*.tmp
 Mojolicious-Plugin-Mongodb-*
 .hg
 *.swp
+MYMETA.*
+META.*
+

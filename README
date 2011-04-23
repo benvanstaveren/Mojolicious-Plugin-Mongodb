@@ -1,4 +1,4 @@
-Mojolicious-Plugin-Mongodb
+foo
 
 The README is used to introduce the module and provide instructions on
 how to install the module, any machine dependencies it may have (for
@@ -16,31 +16,31 @@ INSTALLATION
 
 To install this module, run the following commands:
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+	perl Build.PL
+	./Build
+	./Build test
+	./Build install
 
 SUPPORT AND DOCUMENTATION
 
 After installing, you can find documentation for this module with the
 perldoc command.
 
-    perldoc Mojolicious::Plugin::Mongodb
+    perldoc foo
 
 You can also look for information at:
 
     RT, CPAN's request tracker
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Mojolicious-Plugin-Mongodb
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=foo
 
     AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Mojolicious-Plugin-Mongodb
+        http://annocpan.org/dist/foo
 
     CPAN Ratings
-        http://cpanratings.perl.org/d/Mojolicious-Plugin-Mongodb
+        http://cpanratings.perl.org/d/foo
 
     Search CPAN
-        http://search.cpan.org/dist/Mojolicious-Plugin-Mongodb/
+        http://search.cpan.org/dist/foo/
 
 
 LICENSE AND COPYRIGHT

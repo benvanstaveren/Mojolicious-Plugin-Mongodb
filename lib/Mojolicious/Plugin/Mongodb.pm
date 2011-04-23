@@ -1,11 +1,10 @@
 package Mojolicious::Plugin::Mongodb;
 use warnings;
 use strict;
-use version;
 use Mojo::Base 'Mojolicious::Plugin';
 use MongoDB;
 
-our $VERSION = qv(0.04);
+our $VERSION = '1.02';
 
 sub register {
     my $self = shift;
@@ -16,6 +15,7 @@ sub register {
 
     $app->attr('defaultdb' => sub { delete($conf->{'database'}) || undef });
     $app->attr('connection' => sub { MongoDB::Connection->new($conf) });
+
     $app->helper($conf->{helper} => sub {
         my $self = shift;
         my $db   = shift || $self->app->defaultdb;
@@ -39,7 +39,7 @@ Mojolicious::Plugin::Mongodb - Use MongoDB in Mojolicious
 
 =head1 VERSION
 
-Version 0.04
+Version 1.02
 
 =head1 SYNOPSIS
 

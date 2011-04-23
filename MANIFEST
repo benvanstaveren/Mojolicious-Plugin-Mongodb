@@ -1,5 +1,8 @@
 lib/Mojolicious/Plugin/Mongodb.pm
-Makefile.PL
+Changes
 MANIFEST
 README
 t/00-load.t
+t/01-functional.t
+META.yml
+META.json
