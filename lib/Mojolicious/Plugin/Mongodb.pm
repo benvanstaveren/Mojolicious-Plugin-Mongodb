@@ -1,10 +1,8 @@
-package Mojolicious::Plugin::Mongodb;
 use warnings;
 use strict;
+package Mojolicious::Plugin::Mongodb;
 use Mojo::Base 'Mojolicious::Plugin';
 use MongoDB;
-
-our $VERSION = '1.03';
 
 sub register {
     my $self = shift;
@@ -36,10 +34,6 @@ __END__
 =head1 NAME
 
 Mojolicious::Plugin::Mongodb - Use MongoDB in Mojolicious
-
-=head1 VERSION
-
-Version 1.03
 
 =head1 SYNOPSIS
 
@@ -104,14 +98,11 @@ This helper allows easy access to a collection. If you don't pass the dbname arg
 
 Ben van Staveren, C<< <madcat at cpan.org> >>
 
-=head1 BUGS
+=head1 BUGS/CONTRIBUTING
 
-Please report any bugs through the web interface at L<http://bitbucket.org/xirinet/mojolicious-plugin-mongodb/issues>  
-
-=head1 CONTRIBUTING
-
-If you want to contribute changes or otherwise involve yourself in development, feel free to fork the Mercurial repository from
-L<http://bitbucket.org/xirinet/mojolicious-plugin-mongodb/>.
+Please report any bugs through the web interface at L<http://github.com/benvanstaveren/mojolicious-plugin-mongodb/issues>  
+If you want to contribute changes or otherwise involve yourself in development, feel free to fork the Git repository from
+L<https://github.com/benvanstaveren/mojolicious-plugin-mongodb/>.
 
 
 =head1 SUPPORT
@@ -142,7 +133,7 @@ L<http://search.cpan.org/dist/Mojolicious-Plugin-Mongodb/>
 
 =head1 ACKNOWLEDGEMENTS
 
-Based on Mojolicious::Plugin::Database because I don't want to leave the MongoDB crowd in the cold.
+Based on L<Mojolicious::Plugin::Database> because I don't want to leave the MongoDB crowd in the cold.
 
 Thanks to Henk van Oers for pointing out a few errors in the documentation, and letting me know I should really fix the MANIFEST
 
