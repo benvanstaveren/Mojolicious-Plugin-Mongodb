@@ -1,8 +1,0 @@
-lib/Mojolicious/Plugin/Mongodb.pm
-Changes
-MANIFEST
-README
-t/00-load.t
-t/01-functional.t
-META.yml
-META.json
