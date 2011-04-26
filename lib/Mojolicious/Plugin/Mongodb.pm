@@ -12,20 +12,26 @@ sub register {
     $conf->{helper} ||= 'db';
 
     $app->attr('defaultdb' => sub { delete($conf->{'database'}) || undef });
-    $app->attr('connection' => sub { MongoDB::Connection->new($conf) });
+    $app->attr('mongodb_connection' => sub { MongoDB::Connection->new($conf) });
+    $app->helper('connection' => sub {
+        my $c = shift;
+        warn q|Mojolicious::Plugin::Mongodb: the 'connection' attribute is deprecated, please use 'mongodb_connection' instead!|, "\n";
+        return $c->mongodb_connection;
+    });
 
     $app->helper($conf->{helper} => sub {
         my $self = shift;
         my $db   = shift || $self->app->defaultdb;
-        return ($db) ? $self->app->connection->get_database($db) : undef;
-    });
+        return ($db) ? $self->app->mongodb_connection->get_database($db) : undef;
+    }) unless($conf->{nohelper});
+
     $app->helper('coll' => sub {
         my $self = shift;
         my $coll = shift;
         my $db   = shift || $self->app->defaultdb;
 
         return undef unless($db && $coll);
-        return $self->app->connection->get_database($db)->get_collection($coll);
+        return $self->app->mongodb_connection->get_database($db)->get_collection($coll);
     });
 }
 
@@ -53,17 +59,25 @@ Provides a few helpers to ease the use of MongoDB in your Mojolicious applicatio
 
 =head1 CONFIGURATION OPTIONS
 
-All options passed to the plugin are used to connect to MongoDB, with the exception of the optional 'database' argument; if you pass the 'database' argument, this will be your default database which you will access using the helper you specified. The default name for the helper is 'db'.
+    helper      (optional)  The name to give to the easy-access helper if you want to change it's name from the default
+    no_helper   (optional)  When set to true, no helper will be installed.
+    database    (optional)  Set a default database you want to operate on
 
-=head1 HELPERS/METHODS
+All other options passed to the plugin are used to connect to MongoDB.
+
+=head1 HELPERS/ATTRIBUTES
 
 =head2 connection
 
+This attribute has been deprecated in favor of mongodb_connection.
+
+=head2 mongodb_connection
+
 This plugin attribute holds the MongoDB::Connection object, use this if you need to access it for some reason. 
 
-=head2 db([dbname]) (or if you've given it another name using the 'helper' argument to the plugin method, use that)
+=head2 db([dbname])
 
-This helper will return the database you specify, if you don't specify one, then the default database is returned. If no default has been set and you have not specified a database name, undef will be returned.
+This helper will return the database you specify, if you don't specify one, then the default database is returned. If no default has been set and you have not specified a database name, undef will be returned. If you have renamed the helper, use that name instead of 'db' in the example below :)
 
     sub someaction {
         my $self = shift;
@@ -80,8 +94,7 @@ This helper will return the database you specify, if you don't specify one, then
 
 =head2 coll(collname, [dbname])
 
-This helper allows easy access to a collection. If you don't pass the dbname argument, it will return the given collection inside the default database.
-
+This helper allows easy access to a collection. If you don't pass the dbname argument, it will return the given collection inside the default database. If no default database exists, it will return undef.
 
     sub someaction {
         my $self = shift;

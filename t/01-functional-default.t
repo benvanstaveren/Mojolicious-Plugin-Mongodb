@@ -37,7 +37,7 @@ get '/defaultdb' => sub {
 
 get '/connection' => sub {
     my $self = shift;
-    $self->render(text => ref($self->app->connection));
+    $self->render(text => ref($self->app->mongodb_connection));
 };
 
 get '/getdb' => sub {

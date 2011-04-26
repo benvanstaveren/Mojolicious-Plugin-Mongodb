@@ -1,3 +1,12 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    BACKWARDS COMPATIBILITY BREAKER: Renamed the 'connection' attribute 
+    to 'mongodb_connection', since 'connection' is very generic and could 
+    theoretically end up getting clobbered.
+
+    Added 'no_helper' configuration option to prevent creation of a 
+    helper altogether.
+
+1.06      2011-04-24 19:38:54 Asia/Jakarta
+    No change track
