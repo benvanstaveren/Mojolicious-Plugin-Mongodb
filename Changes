@@ -1,6 +1,16 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    BACKWARDS COMPATIBILITY BREAKER:  This release will probably break your 
+    existing code. Some care went into not changing how the core functionality 
+    works, but keep in mind that things might go hideously wrong.
+
+    Added helpers for findAndModify and mapReduce operations, and changed the 
+    architecture around a bit, we now use our own little object to hold the 
+    connection info and all other pertinent methods and expose them to the user 
+    via helpers.
+
+1.07      2011-04-27 04:14:15 Asia/Jakarta
     BACKWARDS COMPATIBILITY BREAKER: Renamed the 'connection' attribute 
     to 'mongodb_connection', since 'connection' is very generic and could 
     theoretically end up getting clobbered.
