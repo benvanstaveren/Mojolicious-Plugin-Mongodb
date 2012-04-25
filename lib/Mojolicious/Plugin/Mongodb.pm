@@ -3,6 +3,7 @@ use strict;
 package Mojolicious::Plugin::Mongodb;
 use Mojo::Base 'Mojolicious::Plugin';
 use MongoDB;
+use MongoDB::Collection;
 
 sub register {
     my $self = shift;
@@ -27,6 +28,7 @@ sub register {
     $app->helper('coll' => sub { return shift->app->_mongodb->coll(@_) });
 
     if(defined($conf->{patch_mongodb}) && $conf->{patch_mongodb} == 1) {
+        warn __PACKAGE__, ': patching MongoDB driver', "\n";
         use Moose::Util qw/find_meta/;
         if(my $meta = find_meta('MongoDB::Collection')) {
             $meta->make_mutable;
@@ -38,9 +40,8 @@ sub register {
                 $opts->{'ns'} = $self->name,
                 $opts->{'$reduce'} = delete($opts->{'reduce'}) if($opts->{'reduce'});
                 $opts->{'$keyf'} = delete($opts->{'keyf'}) if($opts->{'keyf'});
-                $opts->{'$finalize'} = delete($opts->{'finalize'}) if($opts->{'finalize'});
 
-                return $self->find_one({ group => $opts });
+                return $self->_database->run_command({ group => $opts });
             }, name => 'group', package_name => 'MongoDB::Collection'));
 
             $meta->add_method('find_and_modify' => Moose::Meta::Method->wrap(sub {
@@ -66,6 +67,8 @@ sub register {
             }, name => 'map_reduce', package_name => 'MongoDB::Collection'));
 
             $meta->make_immutable;
+        } else {
+            warn __PACKAGE__, ': could not find MongoDB::Collection meta', "\n";
         }
     } else {
         for my $helpername(qw/find_and_modify map_reduce group/) {
@@ -146,7 +149,6 @@ sub group {
     $opts->{'ns'} = $self->name,
     $opts->{'$reduce'} = delete($opts->{'reduce'}) if($opts->{'reduce'});
     $opts->{'$keyf'} = delete($opts->{'keyf'}) if($opts->{'keyf'});
-    $opts->{'$finalize'} = delete($opts->{'finalize'}) if($opts->{'finalize'});
 
     return $self->find_one({ group => $opts });
 }
