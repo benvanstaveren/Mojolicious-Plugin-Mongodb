@@ -1,6 +1,10 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    Fixed up the experimental patch_mongodb methods to take arguments in the same
+    style as the MongoDB driver; a hash ref, not a hash
+
+1.09      2012-04-26 05:15:02 Asia/Jakarta
     Added experimental 'patch_mongodb' configuration option that will do some
     Moose tricks to import the "group", "find_and_modify" and "map_reduce"
     methods into MongoDB::Collection
