@@ -40,10 +40,7 @@ sub register {
                 $opts->{'$keyf'} = delete($opts->{'keyf'}) if($opts->{'keyf'});
                 $opts->{'$finalize'} = delete($opts->{'finalize'}) if($opts->{'finalize'});
 
-                my $cmd = Tie::IxHash->new(
-                    "group" => $opts
-                );
-                return $self->_database->run_command($cmd);
+                return $self->find_one({ group => $opts });
             }, name => 'group', package_name => 'MongoDB::Collection'));
 
             $meta->add_method('find_and_modify' => Moose::Meta::Method->wrap(sub {
@@ -145,13 +142,13 @@ sub group {
     my $collection = shift;
     my $opts = shift;
 
-    $opts->{ns} = $collection;
+    # fix the shit up
+    $opts->{'ns'} = $self->name,
+    $opts->{'$reduce'} = delete($opts->{'reduce'}) if($opts->{'reduce'});
+    $opts->{'$keyf'} = delete($opts->{'keyf'}) if($opts->{'keyf'});
+    $opts->{'$finalize'} = delete($opts->{'finalize'}) if($opts->{'finalize'});
 
-    my $cmd = Tie::IxHash->new( 
-        "group" => $opts
-    );
-
-    return $self->db->run_command($cmd);
+    return $self->find_one({ group => $opts });
 }
 
 1; 

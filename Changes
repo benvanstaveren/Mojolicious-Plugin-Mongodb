@@ -1,6 +1,11 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    Group as a runCommand apparently does not work the way you think it does,
+    and actually is a parameter to findOne() so that's bene fixed too. Hope
+    now it all works... 
+
+1.10      2012-04-26 05:20:33 Asia/Jakarta
     Fixed up the experimental patch_mongodb methods to take arguments in the same
     style as the MongoDB driver; a hash ref, not a hash
 
