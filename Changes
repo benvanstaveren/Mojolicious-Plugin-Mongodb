@@ -1,6 +1,11 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    Added experimental 'patch_mongodb' configuration option that will do some
+    Moose tricks to import the "group", "find_and_modify" and "map_reduce"
+    methods into MongoDB::Collection
+
+1.08      2012-04-08 04:08:02 Asia/Jakarta
     BACKWARDS COMPATIBILITY BREAKER:  This release will probably break your 
     existing code. Some care went into not changing how the core functionality 
     works, but keep in mind that things might go hideously wrong.
