@@ -25,10 +25,22 @@ sub register {
         return $self->app->_mongodb->db(@_);
     });
 
+    $app->helper('model' => sub {
+        my $c = shift;
+        my $m = shift;
+
+        if($m =~ /^(.*?)\.(.*)/) {
+            # first bit has to be the db 
+            return $c->app->_mongodb->db($1)->get_collection($2);
+        } else {
+            # act like coll
+            return $c->app->_mongodb->coll($m);
+        }
+    });
+
     $app->helper('coll' => sub { return shift->app->_mongodb->coll(@_) });
 
     if(defined($conf->{patch_mongodb}) && $conf->{patch_mongodb} == 1) {
-        warn __PACKAGE__, ': patching MongoDB driver', "\n";
         use Moose::Util qw/find_meta/;
         if(my $meta = find_meta('MongoDB::Collection')) {
             $meta->make_mutable;
@@ -38,8 +50,8 @@ sub register {
 
                 # fix the shit up
                 $opts->{'ns'} = $self->name,
-                $opts->{'$reduce'} = delete($opts->{'reduce'}) if($opts->{'reduce'});
-                $opts->{'$keyf'} = delete($opts->{'keyf'}) if($opts->{'keyf'});
+                $opts->{'$reduce'} = delete($opts->{'reduce'}) if(defined($opts->{'reduce'}));
+                $opts->{'$keyf'} = delete($opts->{'keyf'}) if(defined($opts->{'keyf'}));
 
                 return $self->_database->run_command({ group => $opts });
             }, name => 'group', package_name => 'MongoDB::Collection'));
@@ -219,6 +231,21 @@ This helper allows easy access to a collection. It requires that you have previo
         $self->db('baz');
         my $collection = $self->coll('bar');
     }
+
+=head2 model($db_and_collection) 
+
+This helper functions as a combination of the above, or if you just want to use a different notation. An example usage would be:
+
+    # get the number of items in collection 'bar' in database 'foo'
+    my $count = $self->model('foo.bar')->count();
+
+    # if you use dotted collection names, no problem!
+    my $system_js_count = $self->model('foo.system.js')->count();
+
+    # if you pass it a regular string without dots, this helper will act like C<coll>.
+    my $bar_collection = $self->model('bar');
+
+This helper will set the last selected db to whatever was passed as the database part of the argument, so try not to mix and match C<model> with C<coll> and C<db>. 
 
 =head2 find_and_modify($collname, \%options)
 

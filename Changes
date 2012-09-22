@@ -1,6 +1,10 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    Added a new helper called "model" which acts like a (supposedly) smart 
+    combination of "db" and "coll". Please see the documentation for details.
+
+1.12      2012-04-26 05:50:28 Asia/Jakarta
     So sorry, but doing a findOne on a collection doesn't work because group is
     in fact a command that gets run, but the MongoDB docs about it's proper
     usage are vague, and 
