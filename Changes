@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+1.13      2012-09-23 05:45:53 Asia/Jakarta
     Added a new helper called "model" which acts like a (supposedly) smart 
     combination of "db" and "coll". Please see the documentation for details.
 
