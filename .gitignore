@@ -15,4 +15,5 @@ Mojolicious-Plugin-Mongodb-*
 *.swp
 MYMETA.*
 META.*
-
+.build
+.build/*
