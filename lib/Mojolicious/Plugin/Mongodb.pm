@@ -20,10 +20,11 @@ sub register {
 
     $app->helper('mongodb_connection' => sub { return shift->app->_mongodb->_conn });
 
+
     $app->helper($conf->{helper} => sub {
         my $self = shift;
         return $self->app->_mongodb->db(@_);
-    });
+    }) unless(defined($conf->{no_db}));
 
     $app->helper('model' => sub {
         my $c = shift;
@@ -36,56 +37,13 @@ sub register {
             # act like coll
             return $c->app->_mongodb->coll($m);
         }
-    });
+    }) unless(defined($conf->{no_model}));
 
-    $app->helper('coll' => sub { return shift->app->_mongodb->coll(@_) });
+    $app->helper('coll' => sub { return shift->app->_mongodb->coll(@_) }) unless(defined($conf->{no_coll}));
 
-    if(defined($conf->{patch_mongodb}) && $conf->{patch_mongodb} == 1) {
-        use Moose::Util qw/find_meta/;
-        if(my $meta = find_meta('MongoDB::Collection')) {
-            $meta->make_mutable;
-            $meta->add_method('group' => Moose::Meta::Method->wrap(sub {
-                my $self = shift;
-                my $opts = shift;
-
-                # fix the shit up
-                $opts->{'ns'} = $self->name,
-                $opts->{'$reduce'} = delete($opts->{'reduce'}) if(defined($opts->{'reduce'}));
-                $opts->{'$keyf'} = delete($opts->{'keyf'}) if(defined($opts->{'keyf'}));
-
-                return $self->_database->run_command({ group => $opts });
-            }, name => 'group', package_name => 'MongoDB::Collection'));
-
-            $meta->add_method('find_and_modify' => Moose::Meta::Method->wrap(sub {
-                my $self = shift;
-                my $opts = shift;
-
-                my $cmd = Tie::IxHash->new(
-                    "findAndModify" => $self->name,
-                    %$opts,
-                    );
-                return $self->_database->run_command($cmd);
-            }, name => 'find_and_modify', package_name => 'MongoDB::Collection'));
-
-            $meta->add_method('map_reduce' => Moose::Meta::Method->wrap(sub {
-                my $self = shift;
-                my $opts = shift;
-
-                my $cmd = Tie::IxHash->new(
-                    "mapreduce" => $self->name,
-                    %$opts,
-                    );
-                return $self->_database->run_command($cmd);
-            }, name => 'map_reduce', package_name => 'MongoDB::Collection'));
-
-            $meta->make_immutable;
-        } else {
-            warn __PACKAGE__, ': could not find MongoDB::Collection meta', "\n";
-        }
-    } else {
-        for my $helpername(qw/find_and_modify map_reduce group/) {
-            $app->helper($helpername => sub { return shift->app->_mongodb->$helpername(@_) });
-        }
+    for my $helpername(qw/find_and_modify map_reduce group/) {
+        next if(defined($conf->{'no_' . $_}));
+        $app->helper($helpername => sub { return shift->app->_mongodb->$helpername(@_) });
     }
 }
 
@@ -191,8 +149,10 @@ Provides a few helpers to ease the use of MongoDB in your Mojolicious applicatio
     helper          (optional)  The name to give to the easy-access helper if you want 
                                 to change it's name from the default 'db' 
 
-    patch_mongodb   (optional)  When set to true, will do some Moose tricks on MongoDB::Collection 
-                                to force the group, find_and_modify and map_reduce methods in there
+    no_db           (optional)  Don't install the 'db' helper
+    no_model        (optional)  Don't install the 'model' helper
+    no_coll         (optional)  Don't install the 'coll' helper
+
 
 All other options passed to the plugin are used to connect to MongoDB.
 
@@ -255,30 +215,6 @@ This helper executes a 'findAndModify' operation on the given collection. You mu
 
 This helper executes a 'mapReduce' operation on the given collection. You must have selected a database using the 'db' helper. All options from L<http://www.mongodb.org/display/DOCS/MapReduce> are supported. It will return undef on failure. On success, it will return the raw result from the MongoDB driver, or if you have passed the 'as_cursor' option, it will return a MongoDB::Cursor object for your result collection.
 
-=head1 MONGODB PATCHING
-
-You can pass an option that will use some Moose tricks to add a few often used (and for some reason inexplicably not included) commands into MongoDB::Collection. You can then use them as follows:
-
-    my $db = $self->db('foo');
-    my $coll = $db->get_collection('baz');
-
-    $coll->find_and_modify(...);
-    $coll->group(...);
-    $coll->map_reduce(...);
-
-=head2 find_and_modify(\%options)
-
-    Executes a 'findAndModify' command on the collection. See L<http://www.mongodb.org/display/DOCS/findAndModify+Command> for supported options. It will return the raw result from MongoDB.
-    
-=head2 map_reduce (\%options)
-
-    Executes a 'mapReduce' operation on the collection. All options from L<http://www.mongodb.org/display/DOCS/MapReduce> are supported. It will return the raw result from MongoDB.
-
-=head2 group (\%options)
-
-    Executes a 'group' operation on the collection. All options from L<http://www.mongodb.org/display/DOCS/Aggregation#Aggregation-Group> are supported. It will return the raw result from MongoDB.
-
-
 =head1 AUTHOR
 
 Ben van Staveren, C<< <madcat at cpan.org> >>
@@ -324,7 +260,7 @@ Thanks to Henk van Oers for pointing out a few errors in the documentation, and 
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011, 2012 Ben van Staveren.
+Copyright 2011, 2012, 2013 Ben van Staveren.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
