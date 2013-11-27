@@ -41,8 +41,8 @@ sub register {
 
     $app->helper('coll' => sub { return shift->app->_mongodb->coll(@_) }) unless(defined($conf->{no_coll}));
 
-    for my $helpername(qw/find_and_modify map_reduce group/) {
-        next if(defined($conf->{'no_' . $_}));
+    for my $helpername (qw/find_and_modify map_reduce group/) {
+        next if(defined($conf->{'no_' . $helpername}));
         $app->helper($helpername => sub { return shift->app->_mongodb->$helpername(@_) });
     }
 }
@@ -149,10 +149,12 @@ Provides a few helpers to ease the use of MongoDB in your Mojolicious applicatio
     helper          (optional)  The name to give to the easy-access helper if you want 
                                 to change it's name from the default 'db' 
 
-    no_db           (optional)  Don't install the 'db' helper
-    no_model        (optional)  Don't install the 'model' helper
-    no_coll         (optional)  Don't install the 'coll' helper
-
+    no_db               (optional)  Don't install the 'db' helper
+    no_model            (optional)  Don't install the 'model' helper
+    no_coll             (optional)  Don't install the 'coll' helper
+    no_find_and_modify  (optional)  Don't install the 'find_and_modify' helper
+    no_map_reduce       (optional)  Don't install the 'map_reduce' helper
+    no_group            (optional)  Don't install the 'group' helper
 
 All other options passed to the plugin are used to connect to MongoDB.
 
