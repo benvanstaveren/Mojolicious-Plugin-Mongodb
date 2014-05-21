@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    Fixes to the no_OPTION methods
+
+1.15      2013-07-01 18:07:22 Asia/Jakarta
     Added the 'no_db', 'no_coll' and 'no_model' configuration options.
     Removed the patch_mongodb option because the newer drivers have some
     of the methods it used to patch in available now.
